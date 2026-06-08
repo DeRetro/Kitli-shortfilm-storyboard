@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KITLI — Storyboard & Shot List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Special+Elite&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1c1a17;
+  --paper: #f5f0e8;
+  --paper2: #ede7d9;
+  --sepia: #8b6a3e;
+  --red: #c0392b;
+  --gold: #b8860b;
+  --mid: #6b6253;
+  --light: #a89880;
+  --vlight: #d4c9b8;
+  --border: #2c2720;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ═══════════════ HEADER ═══════════════ */
+.masthead {
+  border-bottom: 3px double var(--border);
+  padding: 2.5rem 2rem 2rem;
+  background: var(--paper2);
+  position: relative;
+  overflow: hidden;
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 8px, transparent 8px, transparent 14px);
+}
+.masthead-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: end;
+}
+.film-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  position: relative;
+}
+.film-title::before {
+  content: 'कित्ली';
+  display: block;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.3rem;
+  color: var(--mid);
+  font-style: italic;
+}
+.film-title span {
+  display: block;
+  color: var(--ink);
+}
+.tagline {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-style: italic;
+  color: var(--mid);
+  margin-top: 0.75rem;
+  max-width: 42ch;
+  line-height: 1.6;
+  font-weight: 300;
+}
+.masthead-meta {
+  text-align: right;
+  font-family: 'Special Elite', monospace;
+  font-size: 0.68rem;
+  color: var(--mid);
+  line-height: 2;
+  letter-spacing: 0.05em;
+}
+.masthead-meta strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.08em;
+}
+
+/* ═══════════════ NAV / CONTROLS ═══════════════ */
+.controls-bar {
+  background: var(--ink);
+  padding: 0.75rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.ctrl-label {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.62rem;
+  color: var(--light);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-right: 0.25rem;
+}
+.fbtn {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+.fbtn:hover, .fbtn.on {
+  background: var(--paper);
+  border-color: var(--paper);
+  color: var(--ink);
+}
+.fbtn.key-btn.on { background: var(--red); border-color: var(--red); color: #fff; }
+.spacer { flex: 1; }
+.print-btn {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.62rem;
+  padding: 0.25rem 0.85rem;
+  border: 1px solid var(--sepia);
+  background: transparent;
+  color: var(--sepia);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+.print-btn:hover { background: var(--sepia); color: #fff; }
+
+/* Progress strip */
+.progress-strip {
+  background: rgba(255,255,255,0.08);
+  padding: 0.4rem 2rem;
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.pseg {
+  height: 4px;
+  flex: 1;
+  min-width: 6px;
+  max-width: 28px;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-radius: 1px;
+}
+.pseg:hover { background: rgba(255,255,255,0.5); }
+.pseg.on { background: var(--paper); }
+.pseg.key-seg { background: rgba(192,57,43,0.4); }
+.pseg.key-seg.on { background: var(--red); }
+
+/* ═══════════════ SYNOPSIS ═══════════════ */
+.synopsis-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+.syn-block h3 {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--vlight);
+}
+.syn-block p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink);
+  font-weight: 300;
+}
+.syn-block p + p { margin-top: 0.75rem; }
+.nepali-text {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+.syn-divider {
+  grid-column: 1/-1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--vlight), transparent);
+  margin: 0;
+}
+
+/* ═══════════════ MAIN CONTENT ═══════════════ */
+.main-content { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ═══════════════ SCENE HEADER ═══════════════ */
+.scene-block { margin-bottom: 3.5rem; }
+.scene-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+.scene-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--vlight);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+.scene-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.scene-subtitle {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--mid);
+}
+.scene-np {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.9rem;
+  color: var(--mid);
+  font-style: italic;
+  margin-left: auto;
+  text-align: right;
+}
+.scene-count {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.62rem;
+  color: var(--light);
+  letter-spacing: 0.1em;
+}
+
+/* Script excerpt in scene */
+.scene-script {
+  background: var(--paper2);
+  border-left: 3px solid var(--sepia);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--mid);
+  font-style: italic;
+  position: relative;
+}
+.scene-script::before {
+  content: '❝';
+  font-size: 2rem;
+  color: var(--vlight);
+  position: absolute;
+  top: 0.3rem;
+  left: 0.5rem;
+  font-style: normal;
+}
+.scene-script p { margin-left: 1.5rem; }
+.scene-script-label {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sepia);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* ═══════════════ SHOT GRID ═══════════════ */
+.shot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ═══════════════ SHOT CARD ═══════════════ */
+.shot-card {
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.shot-card:hover { transform: translateY(-2px) rotate(-0.3deg); }
+.shot-card.active { transform: translateY(-1px) rotate(0.4deg); }
+.shot-card.key-shot .frame-wrap { border-width: 3px !important; border-color: var(--red) !important; }
+
+.frame-wrap {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #faf8f2;
+  border: 2px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+.tape-strip {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 32px;
+  height: 10px;
+  background: rgba(255,215,80,0.5);
+  border: 0.5px solid rgba(180,140,0,0.3);
+  z-index: 2;
+}
+.shot-meta {
+  padding: 6px 2px 2px;
+}
+.shot-num {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.shot-num .key-star { color: var(--red); margin-left: 3px; }
+.shot-tech {
+  font-family: 'Special Elite', monospace;
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: 0.03em;
+  margin-top: 1px;
+  line-height: 1.5;
+}
+.shot-action-text {
+  font-family: 'Caveat', cursive;
+  font-size: 11px;
+  color: var(--mid);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* ═══════════════ EXPANDED SHOT DETAIL ═══════════════ */
+.shot-detail {
+  display: none;
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  margin: 0 0 1.5rem;
+  position: relative;
+}
+.shot-detail.open { display: block; animation: expandIn 0.2s ease; }
+@keyframes expandIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.detail-close {
+  position: absolute;
+  top: 0.6rem; right: 0.75rem;
+  background: none; border: none;
+  font-family: 'Special Elite', monospace;
+  font-size: 0.75rem;
+  color: var(--mid);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+.detail-close:hover { color: var(--ink); }
+.detail-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 0;
+}
+.detail-frame-large {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-right: 2px solid var(--ink);
+  background: #faf8f2;
+  overflow: hidden;
+}
+.detail-info {
+  padding: 1.25rem 1.5rem;
+}
+.detail-shot-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--vlight);
+}
+.detail-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+  align-items: baseline;
+}
+.detail-row .lbl {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--light);
+  min-width: 68px;
+}
+.detail-row .val {
+  font-family: 'Caveat', cursive;
+  font-size: 15px;
+  color: var(--ink);
+}
+.detail-description {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--vlight);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.detail-nepali {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.88rem;
+  color: var(--mid);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ═══════════════ FULL SCRIPT ═══════════════ */
+.script-section {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 3rem 2rem;
+  margin-top: 3rem;
+}
+.script-inner { max-width: 800px; margin: 0 auto; }
+.script-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.script-section .sub {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--light);
+  margin-bottom: 2.5rem;
+}
+.script-scene-title {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.script-body {
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: rgba(245,240,232,0.9);
+}
+.script-body p { margin-bottom: 0.75rem; }
+.script-char {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--vlight);
+  margin: 0.75rem 0 0.25rem;
+  text-align: center;
+}
+.script-action {
+  font-style: italic;
+  color: rgba(245,240,232,0.65);
+}
+
+/* ═══════════════ PRINT ═══════════════ */
+@media print {
+  .controls-bar, .progress-strip, .print-btn { display: none !important; }
+  body { background: white; }
+  .masthead { background: white; }
+  .frame-wrap { background: white; }
+  .shot-detail { display: block !important; page-break-inside: avoid; }
+  .shot-card { page-break-inside: avoid; }
+  .scene-block { page-break-before: always; }
+  .scene-block:first-child { page-break-before: auto; }
+  .script-section { background: #f5f5f5; color: black; }
+  body::before { display: none; }
+}
+
+/* ═══════════════ MOBILE ═══════════════ */
+@media (max-width: 640px) {
+  .masthead-inner { grid-template-columns: 1fr; gap: 1rem; }
+  .masthead-meta { text-align: left; }
+  .synopsis-section { grid-template-columns: 1fr; gap: 1.5rem; }
+  .shot-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-frame-large { border-right: none; border-bottom: 2px solid var(--ink); }
+  .controls-bar { padding: 0.6rem 1rem; gap: 0.35rem; }
+  .main-content { padding: 0 1rem 3rem; }
+  .scene-header { flex-wrap: wrap; gap: 0.5rem; }
+  .scene-num { font-size: 2rem; }
+  .scene-np { margin-left: 0; text-align: left; }
+}
+@media (max-width: 400px) {
+  .shot-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ MASTHEAD ════════════════ -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <div class="film-title"><span>KITLI</span></div>
+      <p class="tagline">A short film about Dhana — a woman from Karnali carrying the weight of caste, labour, and silent grief.</p>
+    </div>
+    <div class="masthead-meta">
+      <strong>STORYBOARD / SHOT LIST</strong>
+      43 shots · 6 locations<br>
+      4 scenes + flashback<br>
+      Format: 16 : 9<br>
+      Language: Nepali
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════ CONTROLS ════════════════ -->
+<nav class="controls-bar" id="controls">
+  <span class="ctrl-label">filter:</span>
+  <button class="fbtn on" onclick="filt('all',this)">all</button>
+  <button class="fbtn" onclick="filt('CU',this)">CU</button>
+  <button class="fbtn" onclick="filt('WS',this)">WS</button>
+  <button class="fbtn" onclick="filt('MS',this)">MS</button>
+  <button class="fbtn" onclick="filt('OTS',this)">OTS</button>
+  <button class="fbtn" onclick="filt('85mm',this)">85mm</button>
+  <button class="fbtn" onclick="filt('50mm',this)">50mm</button>
+  <button class="fbtn" onclick="filt('Static',this)">static</button>
+  <button class="fbtn" onclick="filt('Gimbal',this)">gimbal</button>
+  <button class="fbtn key-btn" onclick="filt('key',this)">★ key shots</button>
+  <div class="spacer"></div>
+  <button class="print-btn" onclick="window.print()">⎙ print</button>
+</nav>
+<div class="progress-strip" id="prog"></div>
+
+<!-- ════════════════ SYNOPSIS ════════════════ -->
+<section class="synopsis-section" id="synopsis">
+  <div class="syn-block">
+    <h3>Synopsis — English</h3>
+    <p>Dhana, ~35, lives in a village in Karnali. She carries everything: an injured husband, elderly in-laws, two small children. To sustain them, she takes a microloan and buys a milch cow — her only chance at income.</p>
+    <p>One dawn, she walks to the dairy with her kitli (milk can). The dairyman refuses. She tries the tea stall. Refused again. She walks to Rita's house with the full can still in her hands. Her eyes fill. The can slips. The milk pours out across the earth.</p>
+    <p>A twig briefly stops the flow — then the milk finds a way around it. <em>New path. Same ground.</em></p>
+  </div>
+  <div class="syn-block">
+    <h3>Synopsis — नेपाली</h3>
+    <p class="nepali-text">कर्नालीको गाउँमा बस्ने करिब ३५ वर्षकी धनाको काँधमा घाइते श्रीमान, वृद्ध सासुससुरा र दुई साना छोराछोरीको जिम्मेवारी छ। लघुवित्तबाट ऋण लिएर गाई किनेकी धनाले दूध बेचेर परिवारको गुजारा चलाउने सपना देखेकी छ।</p>
+    <p class="nepali-text">एक बिहान ऊ दूधको कित्ली बोकेर डेरी पुग्छे — अस्वीकार। चिया पसल — अस्वीकार। रिताको घरमा पुग्दा आँखा भरिएको छ। कित्ली खस्छ। दूध पोखिन्छ — र आफ्नै नयाँ बाटो बनाउँदै बग्छ।</p>
+  </div>
+  <div class="syn-divider"></div>
+</section>
+
+<!-- ════════════════ STORYBOARD ════════════════ -->
+<main class="main-content" id="root"></main>
+
+<!-- ════════════════ FULL SCRIPT ════════════════ -->
+<section class="script-section" id="full-script">
+  <div class="script-inner">
+    <h2>Full Script</h2>
+    <div class="sub">KITLI · NEPALI · ORIGINAL DRAFT</div>
+
+    <div class="script-scene-title">SCENE 1 — EXT. DAIRY — MORNING</div>
+    <div class="script-body">
+      <p class="script-action">झिसमिसे बिहान। धना कित्ली समाएर घरदेखि डेरीतर्फको गोरेटो बाटो हिँडिरहेकी छे।</p>
+      <p class="script-action">डेरीवाला (चन्द्रप्रसाद) ले रिता लाई पैसा र दूधको भाँडा दिन्छ। रिता लिन्छे। डेरीबाट धनातर्फ आउँछे। धना र रिता आमनेसामने। रिताले हात बढाउँछे, धनाले पनि — हात मिल्छ। रिताले धनाको काँधमा थम्थमाउँदै बाहिरिन्छे।</p>
+      <p class="script-action">धना हातमा कित्लीसँगै डेरीको अगाडि उभिन्छे। डेरीवालालाई हेर्छे। हात जोड्छे।</p>
+      <div class="script-char">चन्द्रप्रसाद</div>
+      <p class="script-action">(मुन्टो हल्लाउँछ — अस्वीकृति)</p>
+      <p class="script-action">धनाले चन्द्रप्रसादको अगाडि टेबुलमाथि कित्ली राख्छे।</p>
+      <div class="script-char">चन्द्रप्रसाद</div>
+      <p class="script-action">निधार खुम्च्याउँदै कित्ली हेर्छ। आँखा तरेर धनालाई हेर्छ। दाँत कस्दै धनातर्फ काठले सर्र सार्छ।</p>
+      <p class="script-action">धनाले कित्ली समाएर तान्छे। वरिपरि हेर्छे। डेरीवालालाई हेर्छे।</p>
+      <div class="script-char">चन्द्रप्रसाद</div>
+      <p class="script-action">पूजा गर्ने सानो मन्दिर छेउमा राखेको कलश झिकेर ल्याउँछ। पातिको झुप्पाले टेबुलमाथि गौत छर्किन्छ। (धनाले बुझ्छे — जातको कारण दूध अस्वीकार भएको।)</p>
+      <p class="script-action">धना छड्के नजरले हेर्दै डेरीबाट निस्किन्छे।</p>
+    </div>
+
+    <div class="script-scene-title">SCENE 2 — EXT. CHIYA PASAL — DAY</div>
+    <div class="script-body">
+      <p class="script-action">चिया पसलमा ४–५ जना मानिसहरू। कोही चिया पिउँदै, कोही पर्खाइमा।</p>
+      <p class="script-action">धना पसल अगाडि उभिएर साहुजीलाई हेर्छे, हात जोड्छे।</p>
+      <div class="script-char">साहुजी</div>
+      <p class="script-action">रितातर्फ नजर लगाउँदै एउटा हात उठाउँछ — ग्राहकलाई चिया दिएर भित्रको कोठामा पस्छ।</p>
+      <p class="script-action">चन्द्रप्रसाद मोटरसाइकलको पछिल्लो सिटमा — छोरा (सुन्दर) ले कित्ली समाएर स्कुलको पोसाक लगाएर बसेको छ। हर्न बजाउँदै चिया पसल अगाडि रोकिन्छ।</p>
+      <p class="script-action">सुन्दर मोटरसाइकलबाट झर्छ। चन्द्रप्रसादले स्टान्ड लगाउँछ, सुन्दरको हातबाट कित्ली समाउँछ। सुन्दर झोलाबाट नीलो मोजाको बल निकाल्छ।</p>
+      <p class="script-action">चिया पसले भित्रबाट भगौना लिएर आउँछ। चन्द्रप्रसादले कित्लीको दूध भगौनामा खन्याउँछ, पैसा बुझ्छ, मोटरसाइकलमा चढ्छ, छोरालाई टाटा गर्छ — जान्छ।</p>
+      <p class="script-action">सुन्दर हातमा नीलो मोजाको बल समाउँदै बुवालाई टाटा गर्छ, स्कुलतर्फ लाग्छ — बल माथिमाथि उफार्दै।</p>
+      <p class="script-action">धना लज्जाबोधले चिया पसलबाट निस्किन्छे। डेरीको बाटो हुँदै ओरालो गोरेटोतर्फ झर्छे।</p>
+    </div>
+
+    <div class="script-scene-title">SCENE 3 — EXT. CHAUTARO — DAY</div>
+    <div class="script-body">
+      <p class="script-action">धना थकित हालतमा चौतारीमा कित्ली राख्छे। धारामा जान्छे। मुख धुन्छे, पानी पिउँछे।</p>
+      <p class="script-action">चौतारीमा बस्छे। यताउता हेर्छे — चारैतिर सन्नाटा। गाई किनेको पनि व्यर्थ भएको महसुस गर्छे। कित्लीतिर हेर्छे।</p>
+    </div>
+
+    <div class="script-scene-title">FLASHBACK / MONTAGE — DHANA'S HOUSE</div>
+    <div class="script-body">
+      <p class="script-action">भित्तामा जनमुक्ति सेनाको पोसाक लगाएको पुरानो फोटो र कपडा सिलाउने पुरानो मेसिन।</p>
+      <p class="script-action">मुक्तिले नीलो मोजाको बल सेतो बटुवाले सिलाउँदै छ। छोरी बल सिलाएको हेरिरहेकी छे। गाई र बाच्छाको आवाज — छोरी उठेर त्यसतिर जान्छे।</p>
+      <p class="script-action">धना गाई डोर्याउँदै, रिता एक हातमा कित्ली र लठ्ठी समाएर बाच्छोपछि आउँछन्। छोरी बाच्छोसँग रमाउँछे। मुक्ति सिलाएको बल हातमा समाउँछ। गाई र बाच्छो बाँध्छन्। रिताले आटिमाथि कित्ली राख्छे। रिता र मुक्ति हात मिलाउँछन्। रिता बाहिरिन्छे।</p>
+      <p class="script-action">मुक्तिले बल छोरीतर्फ फाल्छ। छोरी समाउँछे — बललाई माथिमाथि आकाशतर्फ फाल्दै खेल्छे।</p>
+    </div>
+
+    <div class="script-scene-title">SCENE 4 — EXT. RITA'S HOUSE — DAY</div>
+    <div class="script-body">
+      <p class="script-action">धना रिताको घरको आँगनमा टक्क उभिएर रितातिर हेर्छे। रिता गाईलाई कुडो बनाउन आगो फुक्दै छे — धुवाँ पुत्याएर आगो बलेकै छैन।</p>
+      <p class="script-action">रिताले धनालाई देख्छे। छिटोछिटो झिझा समाएर चुलोमा हाल्छे — आगो ह्वारर बल्छ। धनातिर आउँछे।</p>
+      <p class="script-action">दुई जना आमनेसामने। रिताले धनाको हातमा झुन्डिएको कित्ली हेर्छे — भरी जस्तो मान्छे। धनालाई हेर्छे। फेरि कित्ली समाएको हातमा हेर्छे।</p>
+      <p class="script-action">धना एक कदम अगाडि सर्छे। रिताले धनाको आँखामा भरिएको टिलपिल आँसु देख्छे।</p>
+      <p class="script-action">धनाले पाखुराले आँखा पुछ्छे। रितालाई हेर्छे। रितातर्फ कित्ली बढाउँछे। रिताले पनि हात अगाडि बढाउँछे — संकोचपूर्ण। धनाले कित्लीबाट एउटा हात तान्छे। रिताले कित्ली हल्का हातले समाउँछे — कमजोर पकड। <strong>कित्ली भुइँमा खस्छ।</strong></p>
+      <p class="script-action">धना रिताको हातमा हेर्छे। कित्लीबाट दूध पोखिएर भुइँमा बग्छ। रिताले एक कदम पछाडि सर्दै शिर झुकाउँछे।</p>
+      <p class="script-action">धना पोखिएर बगिरहेको दूध हेर्छे। भुइँमा दुई घुडा टेक्दै मूर्छा परेर चिच्याउँदै — विभेदको कारण आफ्नो श्रमको पनि अपमान, परिवारको जीवननिर्वाहका अनेक प्रयत्नहरू खेर जाँदा आक्रोशको ज्वाला।</p>
+      <p class="script-action"><em>एउटा मसिनो काठको सिटोले बगिरहेको दूधको बाटो एकछिन अवरोध गर्छ — एकैछिनमा त्यो काठलाई पुरेर माथिबाट दूध बग्न थाल्छ। दूधले आफ्नो नयाँ बाटो बनाउँदै बगिरहन्छ।</em></p>
+    </div>
+  </div>
+</section>
+
+<script>
+const INK="#1c1a17", PAPER="#faf8f2", MID="#7a6d5e", LIGHT="#b0a090", VLIGHT="#d8cfc0", RED="#c0392b";
+
+// ─── drawing helpers ───
+const S=(d)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" width="100%" height="100%">${d}</svg>`;
+const jit=(a=0.7)=>(Math.random()-0.5)*a;
+const L=(x1,y1,x2,y2,sw=0.7,c=INK,op=1)=>`<line x1="${x1+jit(.3)}" y1="${y1+jit(.3)}" x2="${x2+jit(.3)}" y2="${y2+jit(.3)}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" opacity="${op}"/>`;
+const R=(x,y,w,h,sw=1.2,fill="none",str=INK)=>{
+  const j=()=>jit(.5);
+  return`<path d="M${x+j()} ${y+j()} L${x+w+j()} ${y+j()} L${x+w+j()} ${y+h+j()} L${x+j()} ${y+h+j()} Z" fill="${fill}" stroke="${str}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/>`;
+};
+const T=(txt,x,y,sz=6,wt="normal",fill=INK,anchor="middle")=>`<text x="${x}" y="${y}" font-family="Caveat,cursive" font-size="${sz}" font-weight="${wt}" fill="${fill}" text-anchor="${anchor}" dominant-baseline="central">${txt}</text>`;
+const MT=(txt,x,y,sz=5,fill=INK,anchor="start")=>`<text x="${x}" y="${y}" font-family="'Special Elite',monospace" font-size="${sz}" fill="${fill}" text-anchor="${anchor}">${txt}</text>`;
+
+function hatch(x,y,w,h,gap=4,op=0.15){
+  let lines=[];
+  for(let i=-h;i<w+h;i+=gap) lines.push(`<line x1="${x+i}" y1="${y}" x2="${x+i-h}" y2="${y+h}" stroke="${INK}" stroke-width="0.3" opacity="${op}"/>`);
+  return`<clipPath id="hx${x|0}${y|0}${w|0}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath><g clip-path="url(#hx${x|0}${y|0}${w|0})">${lines.join('')}</g>`;
+}
+function xhatch(x,y,w,h,gap=4,op=0.12){ return hatch(x,y,w,h,gap,op)+hatch(x,y,w,h,gap,op*0.8); }
+
+// sky gradient
+function sky(yH=55){
+  return`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8e4da" stop-opacity="0.6"/><stop offset="100%" stop-color="#faf8f2" stop-opacity="0.1"/></linearGradient></defs><rect x="0" y="0" width="160" height="${yH}" fill="url(#sky)"/>`;
+}
+// ground
+function gnd(y){
+  let l=[];
+  for(let i=0;i<5;i++) l.push(`<path d="M${3+i} ${y+i*2.5} Q80 ${y+i*2.5+0.5} ${157-i} ${y+i*2.5}" fill="none" stroke="${INK}" stroke-width="${0.4-i*0.05}" opacity="${0.25-i*0.04}"/>`);
+  return l.join('');
+}
+// horizon line
+function horiz(y){ return`<path d="M4 ${y} Q40 ${y+jit(.5)} 80 ${y+jit(.3)} Q120 ${y+jit(.5)} 156 ${y}" fill="none" stroke="${INK}" stroke-width="0.6" opacity="0.45"/>`; }
+// mountain silhouette
+function mountains(y=50){
+  return`<path d="M0 ${y} L20 ${y-15} L38 ${y-8} L55 ${y-22} L75 ${y-10} L95 ${y-18} L115 ${y-7} L135 ${y-20} L160 ${y-12} L160 ${y} Z" fill="${VLIGHT}" stroke="${INK}" stroke-width="0.6" opacity="0.5"/>`;
+}
+// treeline
+function trees(y=56){
+  let t=[];
+  const pts=[8,18,30,42,110,125,140,152];
+  pts.forEach(x=>{const h=6+Math.random()*8; t.push(`<path d="M${x} ${y} L${x-h/2} ${y+h} L${x+h/2} ${y+h} Z" fill="${PAPER}" stroke="${INK}" stroke-width="0.5" opacity="0.6"/>`)});
+  return t.join('');
+}
+// house
+function house(x,y,w=22,h=16){
+  return R(x,y+6,w,h,0.8,"rgba(230,225,215,0.7)")+
+    `<path d="M${x-2} ${y+6} L${x+w/2} ${y} L${x+w+2} ${y+6}" fill="rgba(150,130,110,0.3)" stroke="${INK}" stroke-width="0.8"/>`;
+}
+// figure (stick)
+function fig(cx,cy,h=22,emotion="neutral"){
+  const hr=h*0.14, ny=cy-h+hr*2, sy=cy-h+h*0.28, wy=cy-h+h*0.52, hy=cy, ky=cy-h+h*0.75;
+  const headStroke=emotion==="grief"?2:1;
+  let parts=`<circle cx="${cx}" cy="${ny}" r="${hr}" fill="${PAPER}" stroke="${INK}" stroke-width="${headStroke}"/>`;
+  parts+=`<path d="M${cx} ${ny+hr} L${cx+jit(.4)} ${sy}" stroke="${INK}" stroke-width="0.9" stroke-linecap="round"/>`;
+  parts+=`<path d="M${cx+jit(.3)} ${sy} L${cx-6+jit(.4)} ${wy}" stroke="${INK}" stroke-width="0.7" stroke-linecap="round"/>`;
+  parts+=`<path d="M${cx+jit(.3)} ${sy} L${cx+6+jit(.4)} ${wy-2}" stroke="${INK}" stroke-width="0.7" stroke-linecap="round"/>`;
+  parts+=`<path d="M${cx+jit(.3)} ${sy} L${cx+jit(.4)} ${hy-2}" stroke="${INK}" stroke-width="0.8" stroke-linecap="round"/>`;
+  parts+=`<path d="M${cx+jit(.3)} ${hy-2} L${cx-5+jit(.5)} ${cy}" stroke="${INK}" stroke-width="0.7" stroke-linecap="round"/>`;
+  parts+=`<path d="M${cx+jit(.3)} ${hy-2} L${cx+5+jit(.5)} ${cy}" stroke="${INK}" stroke-width="0.7" stroke-linecap="round"/>`;
+  if(emotion==="grief"||emotion==="sad"){
+    parts+=`<path d="M${cx-hr*.6} ${ny+.5} Q${cx} ${ny+hr*.5} ${cx+hr*.6} ${ny+.5}" fill="none" stroke="${INK}" stroke-width="0.6"/>`;
+    parts+=`<line x1="${cx-2}" y1="${ny-hr*.4}" x2="${cx-1.5}" y2="${ny+0.5}" stroke="${INK}" stroke-width="0.4" opacity="0.5"/>`;
+  }
+  return parts;
+}
+// face closeup
+function faceClose(cx,cy,r=20,emotion="neutral"){
+  let f=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${PAPER}" stroke="${INK}" stroke-width="1"/>`;
+  f+=`<ellipse cx="${cx-r*.3}" cy="${cy-r*.1}" rx="${r*.12}" ry="${r*.18}" fill="${INK}" opacity="0.8"/>`;
+  f+=`<ellipse cx="${cx+r*.3}" cy="${cy-r*.1}" rx="${r*.12}" ry="${r*.18}" fill="${INK}" opacity="0.8"/>`;
+  if(emotion==="grief"||emotion==="sad"){
+    f+=`<path d="M${cx-r*.25} ${cy+r*.25} Q${cx} ${cy+r*.15} ${cx+r*.25} ${cy+r*.25}" fill="none" stroke="${INK}" stroke-width="0.8"/>`;
+    // tears
+    f+=`<ellipse cx="${cx-r*.3+r*.05}" cy="${cy+r*.1}" rx="1.5" ry="2.5" fill="${INK}" opacity="0.3"/>`;
+    f+=`<ellipse cx="${cx+r*.3+r*.05}" cy="${cy+r*.1}" rx="1.5" ry="2.5" fill="${INK}" opacity="0.3"/>`;
+    // eyebrows furrowed
+    f+=`<path d="M${cx-r*.45} ${cy-r*.35} Q${cx-r*.3} ${cy-r*.42} ${cx-r*.15} ${cy-r*.38}" fill="none" stroke="${INK}" stroke-width="0.8"/>`;
+    f+=`<path d="M${cx+r*.15} ${cy-r*.38} Q${cx+r*.3} ${cy-r*.42} ${cx+r*.45} ${cy-r*.35}" fill="none" stroke="${INK}" stroke-width="0.8"/>`;
+  } else if(emotion==="shame"){
+    f+=`<path d="M${cx-r*.25} ${cy+r*.3} Q${cx} ${cy+r*.18} ${cx+r*.25} ${cy+r*.3}" fill="none" stroke="${INK}" stroke-width="0.8"/>`;
+    f+=`<path d="M${cx-r*.4} ${cy-r*.3} Q${cx-r*.25} ${cy-r*.38} ${cx-r*.1} ${cy-r*.32}" fill="none" stroke="${INK}" stroke-width="0.7"/>`;
+    f+=`<path d="M${cx+r*.1} ${cy-r*.32} Q${cx+r*.25} ${cy-r*.38} ${cx+r*.4} ${cy-r*.3}" fill="none" stroke="${INK}" stroke-width="0.7"/>`;
+  } else {
+    f+=`<path d="M${cx-r*.2} ${cy+r*.25} Q${cx} ${cy+r*.35} ${cx+r*.2} ${cy+r*.25}" fill="none" stroke="${INK}" stroke-width="0.7"/>`;
+  }
+  return f;
+}
+// kitli (milk can)
+function kitli(x,y,h=14){
+  const w=h*0.6;
+  return R(x-w/2,y,w,h,0.9,"rgba(200,200,190,0.6)")+
+    `<path d="M${x-w*.4} ${y} Q${x} ${y-3} ${x+w*.4} ${y}" fill="none" stroke="${INK}" stroke-width="0.8"/>` +
+    `<path d="M${x-w*.2} ${y} A${w*.2} 3 0 0 1 ${x+w*.2} ${y}" fill="${INK}" opacity="0.15"/>` +
+    `<path d="M${x-w*.1} ${y+h*.25} L${x-w*.1} ${y+h*.5}" stroke="${INK}" stroke-width="0.5" opacity="0.4"/>`;
+}
+// cow silhouette
+function cow(x,y,s=1){
+  const sc=s;
+  return`<g transform="translate(${x},${y}) scale(${sc})">
+    <ellipse cx="0" cy="0" rx="18" ry="9" fill="${PAPER}" stroke="${INK}" stroke-width="0.8"/>
+    <circle cx="-14" cy="-6" r="6" fill="${PAPER}" stroke="${INK}" stroke-width="0.8"/>
+    <path d="M-18 8 L-20 20" stroke="${INK}" stroke-width="1" stroke-linecap="round"/>
+    <path d="M-8 8 L-10 20" stroke="${INK}" stroke-width="1" stroke-linecap="round"/>
+    <path d="M8 8 L6 20" stroke="${INK}" stroke-width="1" stroke-linecap="round"/>
+    <path d="M16 8 L18 20" stroke="${INK}" stroke-width="1" stroke-linecap="round"/>
+    <path d="M17 -3 Q24 -6 26 0 Q24 2 18 1" fill="${PAPER}" stroke="${INK}" stroke-width="0.7"/>
+    <ellipse cx="-12" cy="-8" rx="1.5" ry="1.5" fill="${INK}" opacity="0.6"/>
+  </g>`;
+}
+// fire
+function fire(x,y,h=12){
+  return`<path d="M${x-h*.4} ${y} Q${x-h*.2} ${y-h*.6} ${x} ${y-h} Q${x+h*.1} ${y-h*.7} ${x-h*.1} ${y-h*.5} Q${x+h*.4} ${y-h*.8} ${x+h*.3} ${y}" fill="rgba(200,100,30,0.35)" stroke="${INK}" stroke-width="0.6"/>`;
+}
+// milkflow
+function milkFlow(sx,sy){
+  return`<path d="M${sx} ${sy} Q${sx+15} ${sy+4} ${sx+32} ${sy+2} Q${sx+48} ${sy+6} ${sx+65} ${sy+3} Q${sx+82} ${sy+7} ${sx+95} ${sy+4}" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+  <path d="M${sx} ${sy} Q${sx+15} ${sy+3} ${sx+32} ${sy+1} Q${sx+48} ${sy+5} ${sx+65} ${sy+2} Q${sx+82} ${sy+6} ${sx+95} ${sy+3}" fill="none" stroke="rgba(200,200,180,0.3)" stroke-width="4" stroke-linecap="round"/>`;
+}
+// arrow annotation
+function arr(x1,y1,x2,y2,label=""){
+  const dx=x2-x1,dy=y2-y1,l=Math.sqrt(dx*dx+dy*dy);
+  const nx=dx/l,ny=dy/l;
+  const ax=x2-nx*4-ny*2, ay=y2-ny*4+nx*2;
+  const bx=x2-nx*4+ny*2, by=y2-ny*4-nx*2;
+  return`<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${INK}" stroke-width="0.6" stroke-dasharray="2,1.5"/><path d="M${ax} ${ay} L${x2} ${y2} L${bx} ${by}" fill="none" stroke="${INK}" stroke-width="0.6"/>${label?T(label,x2+5,y2,5,400,INK,"start"):''}`;
+}
+// path lines (for camera moves)
+function camLines(type="eye"){
+  if(type==="low") return`<path d="M0 0 L160 15 M0 15 L160 30" fill="none" stroke="${INK}" stroke-width="0.35" opacity="0.3" stroke-dasharray="3,4"/>`;
+  if(type==="high") return`<path d="M0 20 L160 5 M0 35 L160 20" fill="none" stroke="${INK}" stroke-width="0.35" opacity="0.3" stroke-dasharray="3,4"/>`;
+  return`<path d="M0 5 L160 5 M0 85 L160 85" fill="none" stroke="${INK}" stroke-width="0.25" opacity="0.2"/>`;
+}
+// label footer
+function footer(lens,size,move,angle=""){
+  return MT(`${lens} · ${size} · ${move}${angle?' · '+angle:''}`,2,87,4.5,LIGHT);
+}
+
+// ─── SHOT DRAWINGS ───
+const SHOTS = [
+// BATO
+{num:1,loc:"Bāṭo",lens:"85mm",size:"CU",move:"Gimbal Follow",angle:"Eye level",
+ action:"Close-up: Dhana's hands gripping the kitli as she walks the dirt trail.",
+ nepali:"धनाको हात — कित्लीसहित गोरेटो",tags:["CU","Gimbal","85mm"],
+ draw:()=>S(`${sky(60)}${hatch(0,60,160,30,6,0.12)}${gnd(62)}
+  ${kitli(80,48,20)}${arr(80,70,80,80,"tracking")}
+  ${T("kitli — CU",80,22,7,"bold")}${T("hands in motion",80,32,6)}
+  ${footer("85mm","CU","gimbal follow")}`)},
+
+{num:2,loc:"Bāṭo",lens:"85mm",size:"CU",move:"Gimbal Follow",angle:"Low angle",
+ action:"Low angle CU of Dhana's feet and hem walking the narrow path.",
+ nepali:"धनाको खुट्टाको CU — गोरेटो",tags:["CU","Gimbal","85mm"],
+ draw:()=>S(`${xhatch(0,50,160,40,5,0.14)}${gnd(55)}
+  ${L(0,55,40,60,.8,INK,.6)}${L(40,60,80,58,.8,INK,.6)}${L(80,58,130,62,.8,INK,.6)}${L(130,62,160,60,.8,INK,.6)}
+  ${R(65,42,14,18,1,"rgba(200,190,175,0.5)")}${R(80,44,14,18,1,"rgba(200,190,175,0.5)")}
+  ${arr(55,78,80,62,"low")}${T("feet — low angle",80,20,6,"bold")}
+  ${footer("85mm","CU","gimbal follow","low")}`)},
+
+{num:3,loc:"Bāṭo",lens:"50mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Dhana alone on a winding mountain path, kitli in hand. Valley below.",
+ nepali:"धना गोरेटोमा — फराकिलो दृश्य",tags:["WS","Static","50mm"],
+ draw:()=>S(`${sky(50)}${mountains(50)}${trees(55)}${gnd(60)}
+  ${L(20,60,60,65,1)}${L(60,65,95,62,1)}${L(95,62,140,68,1)}
+  ${fig(55,72,24)}${kitli(62,62,11)}
+  ${T("WIDE — dawn light",80,10,6,"bold")}${T("alone on the path",80,78,5.5)}
+  ${footer("50mm","WS","static")}`)},
+
+// DAIRY
+{num:4,loc:"Dairy",lens:"24mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Dairy exterior. Rita receives payment from dairyman. Dhana enters frame. Rita and Dhana meet, shake hands.",
+ nepali:"डेरीको फराकिलो दृश्य — रिता र धना मिलन",tags:["WS","Static","24mm"],
+ draw:()=>S(`${sky(45)}${hatch(0,45,160,45,6,0.1)}${gnd(52)}
+  ${house(20,30,40,28)}
+  ${R(15,32,55,35,.8,"rgba(220,210,195,0.6)")}
+  ${fig(45,72,22)}${fig(90,72,22)}${fig(130,72,20,"neutral")}
+  ${arr(62,63,82,63,"→ meeting")}
+  ${T("DAIRY — WS",80,10,6,"bold")}
+  ${footer("24mm","WS","static")}`)},
+
+{num:5,loc:"Dairy",lens:"35mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"MS: Dairyman hands payment to Rita. Gaule exits. Rita is in frame.",
+ nepali:"डेरीवाला रिता लाई पैसा दिँदै",tags:["MS","Static","35mm"],
+ draw:()=>S(`${hatch(0,0,160,90,7,0.09)}
+  ${R(10,15,80,65,.9,"rgba(220,210,190,0.4)")}
+  ${fig(40,75,26)}${fig(95,73,24)}
+  ${T("₹",67,62,12,"bold",INK)}${arr(65,60,50,68,"payment")}
+  ${T("DAIRYMAN + RITA",80,10,6,"bold")}
+  ${footer("35mm","MS","static")}`)},
+
+{num:6,loc:"Dairy",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Dairyman's eyes — scanning the kitli with suspicion.",
+ nepali:"डेरीवालाको आँखा — कित्लीमा",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.1)}
+  ${faceClose(80,42,26,"neutral")}
+  ${arr(80,70,80,56,"looking down")}
+  ${T("dairywala — CU",80,12,7,"bold")}${T("suspicious scan",80,80,5.5)}
+  ${footer("85mm","CU","static")}`)},
+
+{num:7,loc:"Dairy",lens:"85mm",size:"POV",move:"Tilt Up",angle:"High angle",
+ action:"Dairyman's POV: tilts up from the kitli on the table to Dhana's face.",
+ nepali:"डेरीवालाको POV — कित्लीदेखि धनाको अनुहारसम्म",tags:["CU","Static","85mm","key"],
+ draw:()=>S(`${hatch(0,0,160,90,5,0.12)}
+  ${kitli(80,68,18)}
+  ${arr(80,55,80,35,"↑ tilt up")}
+  ${faceClose(80,22,16,"shame")}
+  ${T("POV — DAIRYMAN",80,10,6,"bold")}
+  ${footer("85mm","POV","tilt up","high→eye")}`)},
+
+{num:8,loc:"Dairy",lens:"50mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"Dairyman slides the kitli away with a stick. Sprinkles purification water. Dhana exits.",
+ nepali:"दाँत कस्दै काठले कित्ली सार्छ — गौत छर्किन्छ",tags:["MS","Static","50mm","key"],
+ draw:()=>S(`${hatch(0,0,160,90,6,0.1)}
+  ${R(30,25,100,40,.8,"rgba(215,205,185,0.6)")}
+  ${fig(35,72,24)}${kitli(100,30,14)}
+  ${L(112,30,100,30,1.5,INK,.9)}
+  ${arr(112,30,105,28,"stick → sliding")}
+  ${R(80,22,6,6,.6,"rgba(100,80,60,0.5)")}
+  ${T("REJECTION — KEY",80,11,6.5,"bold",RED)}
+  ${arr(40,78,15,78,"← exits")}
+  ${footer("50mm","MS","static")}`)},
+
+{num:9,loc:"Dairy",lens:"85mm",size:"CU",move:"Handheld",angle:"Eye level",
+ action:"CU: The stick slides the kitli. Purification water scatters. Dhana sees.",
+ nepali:"काठले सार्दा — गौत छर्किएको CU",tags:["CU","Handheld","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,4,0.18)}
+  ${kitli(65,35,20)}
+  ${L(100,28,67,38,2,INK,.8)}
+  ${[...Array(8)].map((_,i)=>`<circle cx="${95+Math.random()*20-10}" cy="${25+Math.random()*15}" r="0.9" fill="${INK}" opacity="0.4"/>`).join('')}
+  ${arr(98,28,105,22,"purify")}
+  ${T("STICK SLIDES KITLI",80,10,7,"bold",RED)}
+  ${footer("85mm","CU","handheld")}`)},
+
+{num:10,loc:"Dairy",lens:"85mm",size:"CU",move:"Static",angle:"High angle",
+ action:"Emotional CU — Dhana realises she has been rejected because of caste.",
+ nepali:"धनाको भावनात्मक CU — जातको कारण",tags:["CU","Static","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.15)}
+  ${faceClose(80,44,28,"grief")}
+  ${T("realisation",80,14,7,"bold",RED)}${T("जातको कारण",80,79,6,"normal",MID)}
+  ${footer("85mm","CU","static","high angle")}`)},
+
+{num:11,loc:"Dairy",lens:"35mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Dhana exits dairy, small figure moving toward upper-right. Village behind.",
+ nepali:"धना डेरीबाट बाहिर निस्किन्छे",tags:["WS","Static","35mm"],
+ draw:()=>S(`${sky(48)}${mountains(48)}${trees(54)}${gnd(58)}
+  ${house(15,28,45,30)}
+  ${fig(110,68,20)}${kitli(118,60,10)}
+  ${arr(105,62,120,54,"↗ exits")}
+  ${T("exits — top right",80,10,6,"bold")}
+  ${footer("35mm","WS","static")}`)},
+
+{num:12,loc:"Bāṭo",lens:"50mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"Connecting shot: Dhana walking from dairy to tea stall.",
+ nepali:"डेरीबाट चिया पसलतर्फ",tags:["MS","Static","50mm"],
+ draw:()=>S(`${sky(50)}${gnd(55)}${trees(55)}
+  ${fig(40,70,24)}${kitli(48,62,12)}
+  ${house(115,35,30,22)}
+  ${arr(55,62,100,55,"connecting")}
+  ${T("dairy → chiya pasal",80,10,5.5,"bold")}
+  ${footer("50mm","MS","static")}`)},
+
+// CHIYA PASAL
+{num:13,loc:"Chiyā Pasal",lens:"24mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Establish tea stall. 4-5 customers. Pasale making tea. Dhana enters frame.",
+ nepali:"चिया पसल स्थापना — WS",tags:["WS","Static","24mm"],
+ draw:()=>S(`${sky(44)}${gnd(52)}${hatch(0,52,160,38,7,0.08)}
+  ${R(10,20,140,40,.9,"rgba(210,200,185,0.5)")}
+  ${[30,55,75,100,125].map(x=>`${fig(x,70,20)}`).join('')}
+  ${T("चिया पसल",80,10,7,"bold")}${T("4-5 customers",80,18,5.5)}
+  ${footer("24mm","WS","static")}`)},
+
+{num:14,loc:"Chiyā Pasal",lens:"35mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"MS: Dhana greets pasale with hands folded. Pasale glances at kitli.",
+ nepali:"धना हात जोड्छे — साहुजीले कित्ली देख्छ",tags:["MS","Static","35mm"],
+ draw:()=>S(`${hatch(0,0,160,90,7,0.1)}
+  ${R(15,20,130,55,.8,"rgba(215,205,185,0.55)")}
+  ${fig(50,75,26)}${fig(105,73,25)}
+  ${kitli(62,64,13)}${arr(62,60,100,58,"notice")}
+  ${T("namaste — ignored",80,10,6,"bold")}
+  ${footer("35mm","MS","static")}`)},
+
+{num:15,loc:"Chiyā Pasal",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Dhana's expression — shy, hopeful, watching the pasale.",
+ nepali:"धनाको shy expression",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.11)}
+  ${faceClose(80,44,25,"shame")}${T("hope fading",80,14,7,"bold")}
+  ${footer("85mm","CU","static")}`)},
+
+{num:16,loc:"Chiyā Pasal",lens:"70mm",size:"OTS",move:"Static",angle:"Eye level",
+ action:"OTS Dhana looking at pasale — his back turned, dismissive.",
+ nepali:"धनाको OTS — साहुजी पिठ्युँ फर्किएको",tags:["OTS","Static","70mm"],
+ draw:()=>S(`${hatch(0,0,160,90,7,0.1)}
+  ${fig(22,82,30)}${fig(105,74,24)}
+  ${R(0,0,40,90,0.5,"rgba(180,170,155,0.2)")}
+  ${T("OTS — DHANA",80,10,6,"bold")}${T("pasale turns away",80,78,5.5)}
+  ${footer("70mm","OTS","static")}`)},
+
+{num:17,loc:"Chiyā Pasal",lens:"50mm",size:"MS",move:"Soft Follow",angle:"Eye level",
+ action:"Pasale hands tea to customer — deliberately walks past Dhana into back room.",
+ nepali:"साहुजी भित्र जान्छ — धनालाई बेवास्ता",tags:["MS","Follow","50mm"],
+ draw:()=>S(`${hatch(0,0,160,90,6,0.1)}
+  ${R(80,15,75,65,.8,"rgba(200,190,175,0.5)")}
+  ${fig(45,72,25)}${fig(105,72,24)}${fig(75,72,24)}
+  ${arr(100,62,115,58,"→ back room")}
+  ${T("dismissed",80,10,6,"bold")}${T("soft follow",80,78,5.5)}
+  ${footer("50mm","MS","soft follow")}`)},
+
+{num:18,loc:"Chiyā Pasal",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Dhana watching the pasale's back — he has gone inside.",
+ nepali:"धना — साहुजी भित्र गएको हेर्दै",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.12)}
+  ${faceClose(80,43,24,"shame")}
+  ${arr(80,70,80,80,"looking into void")}
+  ${T("alone — staring",80,12,6.5,"bold")}
+  ${footer("85mm","CU","static")}`)},
+
+{num:19,loc:"Chiyā Pasal",lens:"35mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Dairyman arrives on motorbike — kitli cans hanging on sides. Sundar in school uniform.",
+ nepali:"चन्द्रप्रसाद मोटरसाइकलमा आउँछ",tags:["WS","Static","35mm"],
+ draw:()=>S(`${sky(46)}${gnd(54)}
+  ${R(15,20,130,42,.8,"rgba(215,205,185,0.5)")}
+  ${R(90,50,30,14,.9,"rgba(100,100,90,0.4)")}
+  ${L(90,57,120,57,1.5)}${L(85,54,88,58,1.2)}${L(122,54,125,58,1.2)}
+  ${fig(100,52,20)}
+  ${T("MOTORBIKE ARRIVES",80,10,6.5,"bold")}
+  ${footer("35mm","WS","static")}`)},
+
+{num:20,loc:"Chiyā Pasal",lens:"50mm",size:"MS",move:"Pan Left",angle:"Eye level",
+ action:"Pan: Dairyman parks, takes kitli, walks into the stall. Accepted — no hesitation.",
+ nepali:"दारीवाला कित्ली लिएर भित्र जान्छ",tags:["MS","Pan","50mm","key"],
+ draw:()=>S(`${hatch(0,0,160,90,6,0.1)}
+  ${fig(120,72,24)}${kitli(132,62,14)}
+  ${arr(115,64,80,64,"← panning")}
+  ${fig(60,72,24)}${kitli(72,61,14)}
+  ${R(10,20,80,45,.8,"rgba(215,205,185,0.5)")}
+  ${T("ACCEPTED — no ritual",80,10,6.5,"bold",RED)}
+  ${footer("50mm","MS","pan left")}`)},
+
+{num:21,loc:"Chiyā Pasal",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Sundar's hand pulling a blue sock-ball from his school bag.",
+ nepali:"सुन्दर — नीलो मोजाको बल",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.12)}
+  ${R(55,30,50,35,.9,"rgba(100,120,180,0.25)")}
+  <circle cx="80" cy="48" r="14" fill="rgba(50,80,160,0.25)" stroke="${INK}" stroke-width="1.2"/>
+  ${T("नीलो मोजाको बल",80,15,6.5,"bold")}
+  ${arr(80,64,80,72,"Sundar's hands")}
+  ${footer("85mm","CU","static")}`)},
+
+{num:22,loc:"Chiyā Pasal",lens:"35mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"MS: Dhana watches through the window as Sundar bounces the ball and heads to school.",
+ nepali:"सुन्दर स्कुलतर्फ — बल उफार्दै",tags:["MS","Static","35mm","key"],
+ draw:()=>S(`${sky(46)}${gnd(55)}
+  ${fig(35,74,25)}${kitli(44,64,13)}
+  ${fig(100,70,22)}
+  ${arr(102,58,110,45,"↑ ball toss")}
+  <circle cx="112" cy="38" r="5" fill="rgba(50,80,160,0.2)" stroke="${INK}" stroke-width="0.8"/>
+  ${T("Sundar leaves — ball in air",80,10,6,"bold")}
+  ${footer("35mm","MS","static")}`)},
+
+{num:23,loc:"Chiyā Pasal",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Dhana's face — shame, burning clarity, the contrast understood.",
+ nepali:"धनाको लज्जाबोध — भावनात्मक CU",tags:["CU","Static","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,4.5,0.18)}
+  ${faceClose(80,44,27,"grief")}
+  ${T("LAJJABODH",80,12,7.5,"bold",RED)}${T("shame · understanding",80,80,5.5)}
+  ${footer("85mm","CU","static")}`)},
+
+{num:24,loc:"Chiyā Pasal",lens:"35mm",size:"WS",move:"Static",angle:"Eye level",
+ action:"Wide: Dairyman's cycle, pasale returns, Dhana exits — moving downhill on the path.",
+ nepali:"धना चिया पसलबाट ओरालो लाग्छे",tags:["WS","Static","35mm"],
+ draw:()=>S(`${sky(44)}${gnd(52)}
+  ${R(10,18,140,40,.8,"rgba(215,205,185,0.5)")}
+  ${fig(25,70,22)}${fig(115,70,21)}
+  ${fig(70,72,23)}${kitli(78,63,12)}
+  ${arr(65,70,40,75,"← exits downhill")}
+  ${T("exits — oralo",80,10,6,"bold")}
+  ${footer("35mm","WS","static")}`)},
+
+{num:25,loc:"Chiyā Pasal",lens:"50mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"Pasale pours accepted milk into pan. Dhana's back visible walking away in distance.",
+ nepali:"दूध स्वीकार — धना पर जाँदै",tags:["MS","Static","50mm","key"],
+ draw:()=>S(`${hatch(0,0,160,90,6,0.1)}
+  ${fig(30,72,24)}${R(55,42,16,22,.8,"rgba(180,170,150,0.5)")}
+  ${arr(62,45,68,52,"pouring")}
+  ${fig(130,70,22)}${kitli(138,61,10)}
+  ${T("contrast — foreground/back",80,10,5.5,"bold",RED)}
+  ${footer("50mm","MS","static")}`)},
+
+{num:26,loc:"Bāṭo",lens:"50mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"Connecting shot: Dhana on the path — walking toward Chautaro.",
+ nepali:"धना बाटोमा — चौतारीतर्फ",tags:["MS","Static","50mm"],
+ draw:()=>S(`${sky(48)}${mountains(50)}${gnd(55)}${trees(56)}
+  ${fig(75,72,24)}${kitli(83,63,12)}
+  ${T("→ chautaro",80,10,5.5,"bold")}
+  ${footer("50mm","MS","static")}`)},
+
+// CHAUTARO
+{num:27,loc:"Chautāro",lens:"24mm",size:"WS",move:"Soft Pan",angle:"Eye level",
+ action:"Wide pan: Dhana approaches chautaro from afar, sets down kitli, washes face at tap, sits.",
+ nepali:"धना चौतारीमा — विश्राम",tags:["WS","Pan","24mm"],
+ draw:()=>S(`${sky(46)}${mountains(49)}${trees(54)}${gnd(58)}
+  ${R(65,48,30,10,.8,"rgba(170,150,120,0.5)")}
+  ${R(62,42,36,6,.7,"rgba(140,120,95,0.5)")}
+  ${fig(75,68,24)}${kitli(85,60,12)}
+  ${L(30,58,50,60,.8,INK,.5)}${L(110,59,130,57,.8,INK,.5)}
+  ${T("CHAUTARO — pan",80,10,6,"bold")}${T("rest · wash · sit",80,78,5.5)}
+  ${footer("24mm","WS","soft pan")}`)},
+
+{num:28,loc:"Chautāro",lens:"50mm",size:"MS",move:"Static",angle:"Eye level",
+ action:"MS: Dhana seated at chautaro. Kitli beside her. Silence.",
+ nepali:"धना चौतारीमा बसिरहेको — मौन",tags:["MS","Static","50mm"],
+ draw:()=>S(`${sky(46)}${gnd(55)}${trees(56)}
+  ${R(50,45,60,12,.8,"rgba(170,150,120,0.5)")}${R(47,38,66,7,.7,"rgba(140,120,95,0.5)")}
+  ${fig(75,67,26,"sad")}${kitli(93,58,13)}
+  ${T("stillness",80,10,6.5,"bold")}${T("मौन पीडा",80,78,5.5,400,MID)}
+  ${footer("50mm","MS","static")}`)},
+
+{num:29,loc:"Chautāro",lens:"85mm",size:"MS→CU",move:"Slow Push In",angle:"Eye level",
+ action:"Slow push in from MS to CU of Dhana's face — memory surfacing.",
+ nepali:"धनाको अनुहारमा — बिस्तारै push in",tags:["MS","Static","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.13)}
+  ${faceClose(80,44,26,"sad")}
+  ${R(20,14,120,60,.7,"none",LIGHT)}
+  ${R(10,8,140,68,1.5,"none",INK)}
+  ${arr(145,44,152,44,"push →")}
+  ${T("memory rising",80,10,6.5,"bold")}
+  ${footer("85mm","MS→CU","slow push in")}`)},
+
+// FLASHBACK
+{num:30,loc:"Dhana's House",lens:"85mm",size:"CU→MS",move:"Tilt Down + Pull Back",angle:"Eye level",
+ action:"Tilt down from old photo on wall — Mukti stitching a blue sock-ball. Daughter runs toward sound of cow.",
+ nepali:"फोटो → मुक्ति बल सिलाउँदै",tags:["MS","Static","85mm","key"],
+ draw:()=>S(`${hatch(0,0,160,90,7,0.09)}
+  ${R(8,5,40,30,.8,"rgba(180,160,130,0.5)")}
+  ${T("❒",27,19,12,"bold",LIGHT)}
+  ${arr(28,36,28,48,"↓ tilt down")}
+  ${fig(75,72,26)}
+  <ellipse cx="95" cy="58" rx="12" ry="8" fill="rgba(50,80,160,0.2)" stroke="${INK}" stroke-width="0.9"/>
+  ${T("FLASHBACK",80,10,7,"bold")}${T("mukti stitching ball",80,78,5.5)}
+  ${footer("85mm","CU→MS","tilt down + pull back")}`)},
+
+{num:31,loc:"Dhana's House",lens:"50mm",size:"MS",move:"Soft Follow",angle:"Eye level",
+ action:"Dhana leads the cow. Rita holds kitli and stick, calf behind. A moment of wholeness.",
+ nepali:"धना गाई ल्याउँदै — रिता साथमा",tags:["MS","Follow","50mm"],
+ draw:()=>S(`${sky(46)}${gnd(54)}${trees(56)}
+  ${fig(35,70,24)}${cow(85,65,.7)}${fig(115,70,23)}${kitli(124,62,12)}
+  ${arr(60,63,80,62,"→ soft follow")}
+  ${T("गाई ल्याउँदै",80,10,6.5,"bold")}${T("family complete",80,78,5.5)}
+  ${footer("50mm","MS","soft follow")}`)},
+
+{num:32,loc:"Dhana's House",lens:"24mm",size:"WS",move:"Slow Push In",angle:"Eye level",
+ action:"Wide: Cow arrives in courtyard. Daughter plays with calf. Rita and Mukti shake hands. Mukti tosses ball.",
+ nepali:"आँगनमा गाई — सबै सँगै",tags:["WS","Static","24mm","key"],
+ draw:()=>S(`${sky(44)}${gnd(52)}
+  ${house(115,20,40,32)}
+  ${fig(30,70,24)}${cow(65,66,.65)}${fig(40,68,22)}
+  ${fig(100,70,23)}${fig(130,70,22)}
+  <circle cx="110" cy="40" r="7" fill="rgba(50,80,160,0.2)" stroke="${INK}" stroke-width="0.9"/>
+  ${arr(110,50,110,42,"↑ ball toss")}
+  ${T("WHOLENESS",80,10,7,"bold")}${T("what was lost",80,78,5.5)}
+  ${footer("24mm","WS","slow push in")}`)},
+
+{num:33,loc:"Dhana's House",lens:"70mm",size:"MS",move:"Slow Tilt Up",angle:"Eye level",
+ action:"Daughter tosses the ball. Camera tilts up — ball rises against open sky.",
+ nepali:"बल आकाशतर्फ — slow tilt up",tags:["MS","Static","70mm","key"],
+ draw:()=>S(`${sky(70)}
+  ${fig(80,78,24)}
+  ${arr(80,55,80,40,"↑ tilt up")}
+  <circle cx="80" cy="28" r="10" fill="rgba(50,80,160,0.25)" stroke="${INK}" stroke-width="1"/>
+  ${T("ball into sky",80,10,6.5,"bold")}${T("freedom — before",80,79,5.5)}
+  ${footer("70mm","MS","slow tilt up")}`)},
+
+// RITA'S HOUSE
+{num:34,loc:"Rita's House",lens:"35mm",size:"WS",move:"Tilt Down",angle:"Eye level",
+ action:"Camera tilts down from sky. Rita working — tending to the cook fire. Dhana enters frame.",
+ nepali:"Rita काम गर्दै — Dhana frame in",tags:["WS","Static","35mm"],
+ draw:()=>S(`${sky(46)}${gnd(55)}
+  ${house(90,20,55,32)}${fire(55,68,12)}${fig(55,72,24)}
+  ${arr(80,12,80,25,"↓ tilt down")}
+  ${fig(130,70,23)}${kitli(138,62,12)}
+  ${T("tilt down — Rita working",80,10,5.5,"bold")}
+  ${footer("35mm","WS","tilt down")}`)},
+
+{num:35,loc:"Rita's House",lens:"85mm",size:"OTS",move:"Static",angle:"Eye level",
+ action:"OTS Dhana: Rita working, noticing Dhana's arrival.",
+ nepali:"Dhana को OTS — Rita काम गर्दै",tags:["OTS","Static","85mm"],
+ draw:()=>S(`${hatch(0,0,160,90,6,0.1)}
+  ${fig(22,82,30)}${fire(90,62,10)}${fig(90,70,24)}
+  ${R(0,0,40,90,.4,"rgba(180,165,145,0.2)")}
+  ${T("OTS DHANA",80,10,6,"bold")}
+  ${footer("85mm","OTS","static")}`)},
+
+{num:36,loc:"Rita's House",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Dhana standing — exhausted, holding everything in.",
+ nepali:"धना — थकित, मौन",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.12)}
+  ${faceClose(80,42,26,"sad")}
+  ${T("exhausted",80,13,7,"bold")}${T("carrying it all",80,79,5.5)}
+  ${footer("85mm","CU","static")}`)},
+
+{num:37,loc:"Rita's House",lens:"50mm",size:"MS",move:"Handheld",angle:"Low angle",
+ action:"Rita urgently fans the fire — handheld low, smoke and urgency.",
+ nepali:"रिता ले आगो बाल्दै — urgent low angle",tags:["MS","Handheld","50mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.12)}${gnd(65)}
+  ${fire(70,68,16)}${fig(65,74,26)}
+  ${T("hwārrr!",80,30,9,"bold")}${T("आगो बल्छ",80,44,6.5)}
+  ${arr(55,78,65,68,"handheld → urgency")}
+  ${footer("50mm","MS","handheld","low angle")}`)},
+
+{num:38,loc:"Rita's House",lens:"50mm",size:"MS",move:"Side Follow",angle:"Eye level",
+ action:"Side follow: Rita rises and walks toward Dhana. Two women converge.",
+ nepali:"Rita उठेर Dhana तिर — side follow",tags:["MS","Follow","50mm"],
+ draw:()=>S(`${gnd(65)}
+  ${fig(30,73,26)}${fig(120,71,24)}
+  ${arr(45,60,112,60,"→ converge")}
+  ${T("two women",80,10,6.5,"bold")}${T("approaching",80,78,5.5)}
+  ${footer("50mm","MS","side follow")}`)},
+
+{num:39,loc:"Rita's House",lens:"85mm",size:"OTS",move:"Static",angle:"Eye level",
+ action:"OTS Rita: Dhana's lowered face — shame, need, a wordless ask.",
+ nepali:"धनाको नुरो अनुहार — OTS Rita",tags:["OTS","Static","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.1)}
+  ${fig(20,82,30)}${faceClose(100,42,22,"shame")}
+  ${R(0,0,38,90,.4,"rgba(180,165,145,0.2)")}
+  ${T("wordless ask",100,14,6.5,"bold")}${T("OTS RITA",20,10,5.5,"bold")}
+  ${footer("85mm","OTS","static")}`)},
+
+{num:40,loc:"Rita's House",lens:"85mm",size:"OTS",move:"Static",angle:"Eye level",
+ action:"OTS Dhana: Rita seeing, understanding, feeling the weight.",
+ nepali:"Rita — देख्छे, बुझ्छे",tags:["OTS","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.1)}
+  ${fig(140,82,28)}${faceClose(62,42,22,"neutral")}
+  ${R(122,0,38,90,.4,"rgba(180,165,145,0.2)")}
+  ${T("seeing",62,14,7,"bold")}${T("OTS DHANA",145,10,5.5,"bold")}
+  ${footer("85mm","OTS","static")}`)},
+
+{num:41,loc:"Rita's House",lens:"85mm",size:"Two Shot",move:"Slow Push In",angle:"Eye level",
+ action:"KEY SHOT — Dhana extends kitli to Rita. Rita reaches. Can slips. Falls. Camera pushes to Dhana's face.",
+ nepali:"कित्ली खस्छ — KEY SHOT",tags:["Two Shot","85mm","key"],
+ draw:()=>S(`${xhatch(0,0,160,90,4.5,0.18)}${gnd(72)}
+  ${fig(32,79,28)}${fig(112,77,26)}
+  ${kitli(68,64,18)}
+  ${arr(68,78,65,84,"↓ slips")}${arr(65,84,62,88,"FALLS")}
+  ${R(52,57,56,28,2.5,"none",RED)}
+  ${T("KEY SHOT",80,12,8,"bold",RED)}${T("कित्ली खस्छ",80,80,6,"bold",MID)}
+  ${footer("85mm","Two Shot","slow push in")}`)},
+
+{num:42,loc:"Rita's House",lens:"85mm",size:"CU",move:"Static",angle:"Eye level",
+ action:"CU: Rita bows her head — grief, complicity, helplessness.",
+ nepali:"रिता शिर झुकाउँछे",tags:["CU","Static","85mm"],
+ draw:()=>S(`${xhatch(0,0,160,90,5,0.13)}
+  ${faceClose(80,46,26,"grief")}
+  ${arr(80,72,80,80,"head bows")}
+  ${T("shir jhukāunu",80,12,6.5,"bold")}
+  ${footer("85mm","CU","static · Rita")}`)},
+
+{num:43,loc:"Rita's House",lens:"85mm",size:"CU",move:"Tilt Down + Pull Back",angle:"Eye→High",
+ action:"CLOSING SHOT — camera follows spilled milk flowing across the ground. A twig briefly stops it. The milk finds its way around — new path.",
+ nepali:"दूध बगिरहेको — नयाँ बाटो",tags:["CU","85mm","key"],
+ draw:()=>{
+   const twig=`<line x1="100" y1="52" x2="102" y2="70" stroke="${INK}" stroke-width="1.5" stroke-linecap="round"/><line x1="102" y1="60" x2="112" y2="55" stroke="${INK}" stroke-width="0.9" stroke-linecap="round"/>`;
+   return S(`${xhatch(0,0,160,90,4,0.2)}
+    ${faceClose(50,28,20,"grief")}
+    ${arr(50,49,52,58,"↓ tilt down")}
+    ${milkFlow(32,62)}
+    ${twig}
+    ${arr(102,70,118,72,"finds new path →")}
+    ${T("CLOSING SHOT",80,8,7.5,"bold",RED)}${T("नयाँ बाटो",80,82,6,"bold",MID)}
+    ${footer("85mm","CU","tilt down + pull back","eye→high")}`)}},
+];
+
+const SCENES=[
+  {key:"bato",num:"01",label:"Bāṭo",sublabel:"The Path",nepali:"बाटो — दृश्य",shots:[1,2,3],
+   script:"झिसमिसे बिहान। धना कित्ली समाएर घरदेखि डेरीतर्फको गोरेटो बाटो हिँडिरहेकी छे। एक्लो आवाज — खुट्टाको टापटुप। Valley mist."},
+  {key:"dairy",num:"01",label:"Dairy",sublabel:"Scene 1 — Morning",nepali:"डेरी — दृश्य १",shots:[4,5,6,7,8,9,10,11,12],
+   script:"डेरीवाला (चन्द्रप्रसाद) ले रितालाई पैसा दिन्छ। धना आउँछे। हात जोड्छे। दाँत कस्दै काठले कित्ली सार्छ। पातिको झुप्पाले गौत छर्किन्छ। जातको कारण अस्वीकार।"},
+  {key:"chiya",num:"02",label:"Chiyā Pasal",sublabel:"Scene 2 — Day",nepali:"चिया पसल — दृश्य २",shots:[13,14,15,16,17,18,19,20,21,22,23,24,25,26],
+   script:"चिया पसलमा ४–५ ग्राहक। धना हात जोड्छे — साहुजी भित्र जान्छ। चन्द्रप्रसाद छोरा सुन्दरसँग आउँछ — दूध स्वीकार। सुन्दर नीलो बल उफार्दै स्कुल जान्छ। धना लज्जाले निस्किन्छे।"},
+  {key:"chautaro",num:"03",label:"Chautāro",sublabel:"Scene 3 — Rest",nepali:"चौतारी — दृश्य ३",shots:[27,28,29],
+   script:"थकित धना चौतारीमा बस्छे। मुख धुन्छे। कित्लीतिर हेर्छे। सन्नाटा — सम्झनाको ढोका खुल्छ।"},
+  {key:"flash",num:"—",label:"Flashback",sublabel:"Montage — Memory",nepali:"Flashback — घर",shots:[30,31,32,33],
+   script:"भित्तामा जनमुक्ति फोटो। मुक्ति बल सिलाउँदै। गाई आउँछ। छोरी बाच्छोसँग रमाउँछे। परिवार सँगै — अखण्ड क्षण। मुक्तिले बल फाल्छ — आकाशतर्फ।"},
+  {key:"rita",num:"04",label:"Rita's House",sublabel:"Scene 4 — Climax",nepali:"रिताको घर — दृश्य ४",shots:[34,35,36,37,38,39,40,41,42,43],
+   script:"धना रिताको घरमा उभिन्छे। आँखा भरिएको छ। कित्ली बढाउँछे — रिताले समाउँछे — खस्छ। दूध पोखिन्छ। धना भुइँमा थचक्किन्छे। दूधले काठको सिटो पुरेर नयाँ बाटो बनाउँछ।"},
+];
+
+let activeShotNum = null;
+let activeFilter = 'all';
+
+function byNum(n){ return SHOTS.find(s=>s.num===n); }
+function matches(s,f){
+  if(f==='all') return true;
+  if(f==='key') return s.tags.includes('key');
+  return s.tags.some(t=>t===f);
+}
+
+// Build progress strip
+function buildProg(){
+  const pb = document.getElementById('prog');
+  SHOTS.forEach(s=>{
+    const d = document.createElement('div');
+    d.className = 'pseg' + (s.tags.includes('key') ? ' key-seg' : '');
+    d.id = 'ps'+s.num;
+    d.title = 'Shot '+s.num+(s.tags.includes('key')?' ★':'');
+    d.onclick = ()=>scrollToShot(s.num);
+    pb.appendChild(d);
+  });
+}
+
+function scrollToShot(n){
+  const el = document.getElementById('shot-card-'+n);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  openDetail(n);
+}
+
+function openDetail(n){
+  if(activeShotNum === n){
+    closeAllDetails();
+    return;
+  }
+  closeAllDetails();
+  activeShotNum = n;
+
+  const s = byNum(n); if(!s) return;
+  const sc = SCENES.find(g=>g.shots.includes(n)); if(!sc) return;
+
+  const detEl = document.getElementById('detail-'+sc.key);
+  if(!detEl) return;
+
+  // fill detail
+  document.getElementById('df-'+sc.key).innerHTML = s.draw();
+  document.getElementById('di-'+sc.key).innerHTML = `
+    <div class="detail-shot-title">Shot ${String(n).padStart(2,'0')}${s.tags.includes('key')?' <span style="color:var(--red)">★</span>':''} — ${s.loc}</div>
+    <div class="detail-row"><span class="lbl">Lens</span><span class="val">${s.lens}</span></div>
+    <div class="detail-row"><span class="lbl">Size</span><span class="val">${s.size}</span></div>
+    <div class="detail-row"><span class="lbl">Movement</span><span class="val">${s.move}</span></div>
+    <div class="detail-row"><span class="lbl">Angle</span><span class="val">${s.angle}</span></div>
+    <div class="detail-description">${s.action}</div>
+    <div class="detail-nepali">${s.nepali}</div>
+  `;
+  detEl.classList.add('open');
+
+  // mark card
+  document.querySelectorAll('.shot-card').forEach(c=>c.classList.remove('active'));
+  const card = document.getElementById('shot-card-'+n);
+  if(card) card.classList.add('active');
+
+  // mark progress
+  document.querySelectorAll('.pseg').forEach(p=>p.classList.remove('on'));
+  const ps = document.getElementById('ps'+n);
+  if(ps) ps.classList.add('on');
+
+  setTimeout(()=>detEl.scrollIntoView({behavior:'smooth', block:'nearest'}),80);
+}
+
+function closeAllDetails(){
+  activeShotNum = null;
+  document.querySelectorAll('.shot-detail').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.shot-card').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.pseg').forEach(p=>p.classList.remove('on'));
+}
+
+function filt(f, btn){
+  activeFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  closeAllDetails();
+  renderScenes();
+}
+
+function renderScenes(){
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+
+  SCENES.forEach(sc=>{
+    const visible = sc.shots.filter(n=>{ const s=byNum(n); return s && matches(s,activeFilter); });
+    if(!visible.length) return;
+
+    const block = document.createElement('section');
+    block.className = 'scene-block';
+
+    // header
+    block.innerHTML = `
+      <header class="scene-header">
+        <span class="scene-num">${sc.num}</span>
+        <div>
+          <div class="scene-title">${sc.label}</div>
+          <div class="scene-subtitle">${sc.sublabel}</div>
+        </div>
+        <span class="scene-np">${sc.nepali}</span>
+        <span class="scene-count">${visible.length} shots</span>
+      </header>
+      <div class="scene-script"><span class="scene-script-label">Script excerpt</span><p>${sc.script}</p></div>
+    `;
+
+    // detail panel
+    const det = document.createElement('div');
+    det.className = 'shot-detail';
+    det.id = 'detail-'+sc.key;
+    det.innerHTML = `
+      <button class="detail-close" onclick="closeAllDetails()">✕ close</button>
+      <div class="detail-grid">
+        <div class="detail-frame-large" id="df-${sc.key}"></div>
+        <div class="detail-info" id="di-${sc.key}"></div>
+      </div>
+    `;
+    block.appendChild(det);
+
+    // grid
+    const grid = document.createElement('div');
+    grid.className = 'shot-grid';
+
+    visible.forEach(n=>{
+      const s = byNum(n); if(!s) return;
+      const isKey = s.tags.includes('key');
+      const card = document.createElement('article');
+      card.className = 'shot-card' + (isKey?' key-shot':'');
+      card.id = 'shot-card-'+n;
+      card.onclick = ()=>openDetail(n);
+      card.innerHTML = `
+        <div class="frame-wrap">
+          <div class="tape-strip"></div>
+          ${s.draw()}
+        </div>
+        <div class="shot-meta">
+          <div class="shot-num">Shot ${String(n).padStart(2,'0')}${isKey?'<span class="key-star">★</span>':''}</div>
+          <div class="shot-tech">${s.lens} · ${s.size} · ${s.move}</div>
+          <div class="shot-action-text">${s.action.substring(0,70)}${s.action.length>70?'…':''}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    block.appendChild(grid);
+    root.appendChild(block);
+  });
+}
+
+buildProg();
+renderScenes();
+</script>
+</body>
+</html>
